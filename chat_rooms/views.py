@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
+from .models import Message
 
 
 # Create your views here.
@@ -71,9 +72,16 @@ def user_logout(request):
 
 
 def home(request):
-    context = {}
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            content = request.POST.get('content')
+            if content:
+                Message.objects.create(sender=request.user, content=content)
+                return redirect('home')
+        else:
+            messages.error(request, 'You need to login to send messages')
+            return redirect('login')
     
-    # Add any additional context data here
-    # Example: context['posts'] = Post.objects.all()
-    
+    chat_messages = Message.objects.all().order_by('created_at')
+    context = {'chat_messages': chat_messages}
     return render(request, 'chat_rooms/home.html', context)
