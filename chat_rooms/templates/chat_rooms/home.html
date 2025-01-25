@@ -29,16 +29,26 @@
                     <span class="username">{{ message.sender.username }}</span>
                     <span class="timestamp">{{ message.created_at|timesince }} ago</span>
                 </div>
-                <div class="message-content">{{ message.content }}</div>
+                <div class="message-content">
+                    {% if message.content %}{{ message.content }}{% endif %}
+                    {% if message.image %}
+                        <img src="{{ MEDIA_URL }}{{ message.image }}" alt="Uploaded image" class="chat-image">
+                    {% endif %}
+                </div>
             </div>
             {% endfor %}
         </div>
         
         {% if request.user.is_authenticated %}
-        <form method="POST" class="message-form">
+        <form method="POST" class="message-form" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="text" name="content" placeholder="Type your message..." required>
-            <button type="submit">Send</button>
+            <div class="input-group">
+                <input type="text" name="content" placeholder="Type your message...">
+                <label class="file-upload">
+                    📎 <input type="file" name="image" accept="image/*">
+                </label>
+                <button type="submit">Send</button>
+            </div>
         </form>
         {% else %}
         <div class="login-prompt">
@@ -62,7 +72,6 @@
                 const doc = parser.parseFromString(data, 'text/html');
                 const newChatBox = doc.getElementById('chat-box');
                 chatBox.innerHTML = newChatBox.innerHTML;
-                chatBox.scrollTop = chatBox.scrollHeight;
             });
     }, 2000);
 </script>

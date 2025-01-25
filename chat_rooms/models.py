@@ -15,7 +15,8 @@ from django.contrib.auth.models import User
 
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='sent_messages', null=True)
-    content = models.TextField()
+    content = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to='chat_images/', blank=True, null=True)
     #room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages')
     created_at = models.DateTimeField(auto_now_add=True)
 

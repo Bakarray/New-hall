@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Message
+from django.conf import settings
 
 
 # Create your views here.
@@ -75,13 +76,22 @@ def home(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
             content = request.POST.get('content')
-            if content:
-                Message.objects.create(sender=request.user, content=content)
+            image = request.FILES.get('image')
+
+            if content or image:
+                Message.objects.create(
+                    sender=request.user, 
+                    content=content,
+                    image=image
+                    )
                 return redirect('home')
         else:
             messages.error(request, 'You need to login to send messages')
             return redirect('login')
     
     chat_messages = Message.objects.all().order_by('created_at')
-    context = {'chat_messages': chat_messages}
+    context = {
+        'chat_messages': chat_messages,
+        'MEDIA_URL': settings.MEDIA_URL
+               }
     return render(request, 'chat_rooms/home.html', context)
