@@ -1,20 +1,20 @@
 databases:
-  - name: newhalldb
+  - name: mysitedb
     plan: free
-    databaseName: newhall
-    user: newhall
+    databaseName: mysite
+    user: mysite
 
 services:
   - type: web
     plan: free
-    name: newhall
+    name: mysite
     runtime: python
     buildCommand: "./build.sh"
     startCommand: "python -m gunicorn new_hall.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: newhalldb
+          name: mysitedb
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
