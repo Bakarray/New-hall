@@ -21,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%8zkxk&0v%^2p$5i)f0r3obq#*r6q09*(#&h7+#p-3hzl$8=0*'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-your-local-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['https://mysite-h8re.onrender.com', '127.0.0.1', 'localhost']
 
@@ -84,7 +84,6 @@ DATABASES = {
         conn_max_age=600
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
